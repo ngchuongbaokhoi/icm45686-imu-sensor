@@ -1,39 +1,69 @@
 #include "SensorBaseProvider.h"
 
-// TODO:
-// Implement Linux/POSIX sensor provider.
-//
-// Responsibilities:
-// 1. Open/configure IIO device
-// 2. Enable/disable sensor
-// 3. Read IIO samples
-// 4. Convert IIO data to SensorEvent
-// 5. Expose polling interface for SensorManager.cpp
-// 6. Keep implementation Linux-specific
+const char* IIO_DEVICES_DIR = "/sys/buss/iio/devices";
 
 SensorBaseProvider::SensorBaseProvider()
+	:_accel_fd(-1),
+	 _gyro_fd(-1),
+	 _accel_scale(0.0f),
+	 _gyro_scale(0.0f),
+	 _initialized(false),
+	 _streaming(false)
+
 {
-    // TODO
+
 }
 
 SensorBaseProvider::~SensorBaseProvider()
 {
-    // TODO
+    deinit();
 }
 
 bool SensorBaseProvider::init()
 {
-    // TODO
-    return false;
+    if (_initialized) {
+        return true;
+    }
+
+    if (!findIIODeviceByName("icm45686-accel", _accel_sysfs, _accel_devnode)) {
+        fprintf(stderr, "init: accel IIO device not found!\n");
+	return false;
+    }
+
+    if (!findIIODeviceByName("icm45686-gyro", _gyro_sysfs, _gyro_devnode)) {
+        fprintf(stderr, "init: gyro IIO device not found!\n");
+	return false;
+    }
+
+    _initialized = true;
+    return true;
 }
 
-bool SensorBaseProvider::enable()
+bool SensorBaseProvider::openDevice()
 {
     // TODO
     return false;
 }
 
-bool SensorBaseProvider::disable()
+bool SensorBaseProvider::start()
+{
+    // TODO
+    return false;
+}
+
+bool SensorBaseProvider::stop()
+{
+    // TODO
+    return false;
+}
+
+bool SensorBaseProvider::readSensor()
+{
+    // TODO
+    return false;
+}
+
+bool SensorBaseProvider::convertSensorData()
 {
     // TODO
     return false;
@@ -43,4 +73,10 @@ int SensorBaseProvider::poll(SensorEvent& event)
 {
     // TODO
     return -1;
+}
+
+bool SensorBaseProvider::deinit()
+{
+    // TODO
+    return false;
 }
